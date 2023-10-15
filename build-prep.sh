@@ -92,11 +92,6 @@ rpm-ostree install \
     mock
 
 
-if [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
-    echo "Removing stock kernel parts"
-    rpm-ostree override remove kernel-core kernel-modules-core kernel-devel-matched kernel-devel
-fi
-
 if [[ ! -s "/tmp/certs/private_key.priv" ]]; then
     echo "WARNING: Using test signing key. Run './generate-akmods-key' for production builds."
     cp /tmp/certs/private_key.priv{.test,}

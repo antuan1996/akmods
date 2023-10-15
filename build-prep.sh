@@ -70,19 +70,8 @@ elif [[ "surface" == "${KERNEL_FLAVOR}" ]]; then
         --install kernel-surface-modules \
         --install kernel-surface-modules-core \
         --install kernel-surface-modules-extra
-elif [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
-    echo "Installing CachyOS Kernel:"
-    # Add CachyOS repo
-    wget https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-$(rpm -E %fedora)/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo -P /etc/yum.repos.d
-    rpm-ostree cliwrap install-to-root /
-    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra \ 
-        --install kernel-cachyos-lts \
-        --install kernel-cachyos-lts-devel \
-        --install kernel-cachyos-lts-headers
-    # rpm-ostree install kernel-cachyos-lts-devel kernel-cachyos-lts-headers
-    rm /etc/yum.repos.d/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo
 else
-    echo "Default main kernel needs no customization."
+    echo "No need for customization before akmods installation."
 fi
 
 
@@ -90,6 +79,17 @@ fi
 rpm-ostree install \
     akmods \
     mock
+
+
+elif [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
+    echo "Installing CachyOS Kernel:"
+    # Add CachyOS repo
+    wget https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-$(rpm -E %fedora)/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo -P /etc/yum.repos.d
+    rpm-ostree cliwrap install-to-root /
+    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-devel kernel-devel-matched --install kernel-cachyos-lts
+    rpm-ostree install kernel-cachyos-lts-devel kernel-cachyos-lts-headers
+    rm /etc/yum.repos.d/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo
+fi
 
 if [[ ! -s "/tmp/certs/private_key.priv" ]]; then
     echo "WARNING: Using test signing key. Run './generate-akmods-key' for production builds."

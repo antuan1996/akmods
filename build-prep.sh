@@ -93,8 +93,8 @@ rpm-ostree install \
 
 
 if [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
-    echo "Removing stock kernel:"
-    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-devel-matched kernel-devel kernel-headers
+    echo "Removing stock kernel parts"
+    rpm-ostree override remove kernel-core kernel-modules-core kernel-devel-matched kernel-devel
 fi
 
 if [[ ! -s "/tmp/certs/private_key.priv" ]]; then

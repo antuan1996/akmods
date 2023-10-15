@@ -77,6 +77,7 @@ elif [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
     rpm-ostree cliwrap install-to-root /
     rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra --install kernel-cachyos-lts
     rpm-ostree install kernel-cachyos-lts-devel kernel-cachyos-lts-headers
+    rm /etc/yum.repos.d/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo
 else
     echo "Default main kernel needs no customization."
 fi

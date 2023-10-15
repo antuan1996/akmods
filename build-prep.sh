@@ -70,6 +70,17 @@ elif [[ "surface" == "${KERNEL_FLAVOR}" ]]; then
         --install kernel-surface-modules \
         --install kernel-surface-modules-core \
         --install kernel-surface-modules-extra
+elif [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
+    echo "Installing CachyOS Kernel:"
+    # Add CachyOS repo
+    wget https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-$(rpm -E %fedora)/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo -P /etc/yum.repos.d
+    rpm-ostree cliwrap install-to-root /
+    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra \
+        --install kernel-cachyos-lts 
+        --install kernel-cachyos-lts-devel \
+        --install kernel-cachyos-lts-headers
+    # rpm-ostree install kernel-cachyos-lts-devel kernel-cachyos-lts-headers
+    rm /etc/yum.repos.d/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo
 else
     echo "No need for customization before akmods installation."
 fi
@@ -82,17 +93,8 @@ rpm-ostree install \
 
 
 if [[ "cachy" == "${KERNEL_FLAVOR}" ]]; then
-    echo "Installing CachyOS Kernel:"
-    # Add CachyOS repo
-    wget https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-$(rpm -E %fedora)/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo -P /etc/yum.repos.d
-    rpm-ostree cliwrap install-to-root /
-    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-devel-matched \
-        --install kernel-cachyos-lts 
-    rpm-ostree override remove kernel-devel kernel-headers \
-        --install kernel-cachyos-lts-devel \
-        --install kernel-cachyos-lts-headers
-    # rpm-ostree install kernel-cachyos-lts-devel kernel-cachyos-lts-headers
-    rm /etc/yum.repos.d/bieszczaders-kernel-cachyos-fedora-$(rpm -E %fedora).repo
+    echo "Removing stock kernel:"
+    rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-devel-matched kernel-devel kernel-headers
 fi
 
 if [[ ! -s "/tmp/certs/private_key.priv" ]]; then

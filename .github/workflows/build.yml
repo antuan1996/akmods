@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kernel_flavor: [main]
-        cfile_suffix: [common, nvidia]
+        kernel_flavor: [main, cachy]
+        cfile_suffix: [nvidia]
         major_version: [38]
         nvidia_version: [535]
         exclude:

@@ -32,10 +32,12 @@ RUN /tmp/build-prep.sh
 
 RUN /tmp/build-ublue-os-nvidia-addons.sh
 
-RUN if grep -qv "surface" <<< "${KERNEL_FLAVOR}"; then \
-       export KERNEL_NAME="kernel" \
-    ; else \
+RUN if grep -q "surface" <<< "${KERNEL_FLAVOR}"; then \
        export KERNEL_NAME="kernel-surface" \
+    ; elif grep -q "cachy" <<< "${KERNEL_FLAVOR}"; then \
+       export KERNEL_NAME="kernel-cachyos-lts" \
+    ; else \
+       export KERNEL_NAME="kernel" \
     ; fi && \
     /tmp/build-kmod-nvidia.sh ${NVIDIA_MAJOR_VERSION}
 

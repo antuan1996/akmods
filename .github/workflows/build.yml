@@ -3,7 +3,7 @@ on:
   pull_request:
   merge_group:
   schedule:
-    - cron: '0 6 * * *'  # 6am everyday (1h after 'config')
+    - cron: '30 7 * * *'
   workflow_dispatch:
 env:
     IMAGE_NAME: akmods

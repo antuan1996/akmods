@@ -23,7 +23,7 @@ jobs:
       matrix:
         kernel_flavor: [cachy]
         cfile_suffix: [nvidia]
-        major_version: [38]
+        major_version: [39]
         nvidia_version: [535]
         exclude:
           - cfile_suffix: common

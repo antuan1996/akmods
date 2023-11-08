@@ -4,7 +4,8 @@
 
 #Build from base, simpley because it's the smallest image
 ARG SOURCE_IMAGE="${SOURCE_IMAGE:-base}"
-ARG BASE_IMAGE="quay.io/fedora-ostree-desktops/${SOURCE_IMAGE}"
+ARG SOURCE_ORG="${SOURCE_ORG:-fedora-ostree-desktops}"
+ARG BASE_IMAGE="quay.io/${SOURCE_ORG}/${SOURCE_IMAGE}"
 ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION:-38}"
 
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION} AS builder
@@ -34,6 +35,9 @@ RUN if grep -qv "surface" <<< "${KERNEL_FLAVOR}"; then \
     ; else \
         export KERNEL_NAME="kernel-surface" \
     ; fi && \
+    if grep -qv "asus" <<< "${KERNEL_FLAVOR}"; then \
+        /tmp/build-kmod-evdi.sh \
+    ; fi && \
     /tmp/build-kmod-gasket.sh && \
     /tmp/build-kmod-gcadapter_oc.sh && \
     /tmp/build-kmod-nct6687d.sh && \
@@ -46,10 +50,7 @@ RUN if grep -qv "surface" <<< "${KERNEL_FLAVOR}"; then \
     /tmp/build-kmod-wl.sh && \
     /tmp/build-kmod-xpadneo.sh && \
     /tmp/build-kmod-xpad-noone.sh && \
-    /tmp/build-kmod-xone.sh && \
-    if [[ "${FEDORA_MAJOR_VERSION}" -le "38" ]]; then \
-        /tmp/build-kmod-evdi.sh \
-    ; fi
+    /tmp/build-kmod-xone.sh
 
 RUN cp /tmp/ublue-os-akmods-addons/rpmbuild/RPMS/noarch/ublue-os-akmods-addons*.rpm \
       /var/cache/rpms/ublue-os/
